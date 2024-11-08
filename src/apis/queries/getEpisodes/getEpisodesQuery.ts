@@ -1,20 +1,20 @@
 import { DocumentNode, gql } from "@apollo/client";
 
 export const GET_EPISODES: DocumentNode = gql`
-  query Query {
-    episodes {
+  query Query($page: Int) {
+    episodes(page: $page) {
       info {
+        count
         next
         pages
         prev
-        count
       }
       results {
-        air_date
         name
         id
         episode
         created
+        air_date
       }
     }
   }

@@ -5,8 +5,6 @@ import {
   InMemoryCache,
   HttpLink,
 } from "@apollo/client";
-import { persistCache } from "apollo3-cache-persist";
-import { offsetLimitPagination } from "@apollo/client/utilities";
 
 import "./index.css";
 import App from "./App.tsx";
@@ -15,7 +13,12 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        launches: {},
+        episodes: {
+          keyArgs: ["page"],
+          read: (currentData) => {
+            return currentData;
+          },
+        },
       },
     },
   },

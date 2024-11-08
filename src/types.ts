@@ -1,12 +1,64 @@
-import { ApolloError } from "@apollo/client";
+import {
+  ApolloError,
+  ApolloQueryResult,
+  FetchMoreQueryOptions,
+  LazyQueryExecFunction,
+  OperationVariables,
+} from "@apollo/client";
 import EpisodeModel from "./models/EpisodeModel";
 import CharacterModel from "./models/CharacterModel";
 
+export interface CharacterLocationType {
+  id: string;
+  name: string;
+}
+export interface CharacterOriginType {
+  id: string;
+  name: string;
+}
+
+export interface CharacterLocationResponseType {
+  id: string;
+  name: string;
+}
+export interface CharacterOriginResponseType {
+  id: string;
+  name: string;
+}
+
 export interface FetchEpisodesHookType {
   (): {
+    fetchMoreLoading: boolean;
     loading: boolean;
     error: ApolloError | undefined;
+    fetchMore: <TFetchData = any, TFetchVars extends OperationVariables = any>(
+      fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData> & {
+        updateQuery?: (
+          previousQueryResult: any,
+          options: {
+            fetchMoreResult: TFetchData;
+            variables: TFetchVars;
+          }
+        ) => any;
+      }
+    ) => Promise<ApolloQueryResult<TFetchData>>;
   };
+}
+
+export interface EpisodesTabPropsType {
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  fetchMore: <TFetchData = any, TFetchVars extends OperationVariables = any>(
+    fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData> & {
+      updateQuery?: (
+        previousQueryResult: any,
+        options: {
+          fetchMoreResult: TFetchData;
+          variables: TFetchVars;
+        }
+      ) => any;
+    }
+  ) => Promise<ApolloQueryResult<TFetchData>>;
 }
 
 export interface EpisodesInfoType {
@@ -15,6 +67,17 @@ export interface EpisodesInfoType {
   pages: number;
   prev: number | null;
   __typename: string;
+}
+
+export interface CharacterIdDataResponseType {
+  id: string;
+  gender: string;
+  image: string;
+  name: string;
+  status: string;
+  __typename: string;
+  origin: CharacterOriginResponseType;
+  location: CharacterLocationResponseType;
 }
 
 export interface EpisodeResponseDataType {
@@ -34,9 +97,22 @@ export interface EpisodeType {
   created: string;
 }
 
+export interface EpisodesPaginationType {
+  totalPages: number;
+  next: number | null;
+  prev: number | null;
+}
+
 export interface EpisodesResponseDataType {
   info: EpisodesInfoType;
   results: EpisodeResponseDataType[];
+}
+
+export interface FetchMoreDataType {
+  episodes: {
+    info: EpisodesInfoType;
+    results: EpisodeResponseDataType[];
+  };
 }
 
 export interface EpisodePropsType {
@@ -48,6 +124,7 @@ export interface EpisodePropsType {
 export interface EpisodeModalPropsType {
   close: () => void;
   episodeId: string;
+  currentPage: number;
 }
 
 export interface FetchEpisodeHookType {
@@ -64,8 +141,17 @@ export interface FetchCharactersHookType {
   };
 }
 
+export interface FetchCharacterByIdHookType {
+  (): {
+    loading: boolean;
+    error: ApolloError | undefined;
+    getCharacter: LazyQueryExecFunction<any, OperationVariables>;
+  };
+}
+
 export interface EpisodeDetailsPropsType {
   episodeId: string;
+  currentPage: number;
 }
 
 export interface CharactersPropsType {
@@ -83,6 +169,7 @@ export interface CharacterDataResponseType {
 
 export interface CharacterPropsType {
   character: CharacterModel;
+  handleFetchCharacter: (characterId: string) => void;
 }
 
 export interface FormatEpisodesType {
@@ -105,4 +192,11 @@ export interface ReactElementFunctionType {
 
 export interface VoidFunctionType {
   (): void;
+}
+
+export interface CharacterDetailsModalProps {
+  close: () => void;
+  characterLoading: boolean;
+  characterError: ApolloError | undefined;
+  selectedCharacter: string;
 }

@@ -1,39 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useFetchEpisodes from "../apis/queries/getEpisodes/useFetchEpisodes";
 import { observer } from "mobx-react-lite";
 import episodeStore from "../store/EpisodeStore";
 import Episode from "../components/Episode";
 import EpisodeModal from "../components/EpisodeModal";
 import { ReactElementFunctionType, VoidFunctionType } from "../types";
+import Loader from "../components/Loader";
+import EpisodesTab from "../components/EpisodesTab";
+
+const renderLoader: ReactElementFunctionType = () => {
+  return (
+    <div className="flex my-auto items-center justify-center h-[400px]">
+      <Loader />
+    </div>
+  );
+};
+const renderErrorView: ReactElementFunctionType = () => {
+  return (
+    <div>
+      <h1>Something went wrong !!!</h1>
+    </div>
+  );
+};
 
 const Episodes: React.FC = observer(() => {
-  const { loading, error } = useFetchEpisodes();
   const [showEpisodeModal, setShowEpisodeModal] = useState<boolean>(false);
   const [episodeId, setEpisodeId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const renderLoader: ReactElementFunctionType = () => {
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
-  };
+  const { loading, error, fetchMore, fetchMoreLoading } = useFetchEpisodes();
+  const pagination = episodeStore.paginationData;
+  const { next, totalPages } = pagination;
+  const page = next ? next - 1 : totalPages;
 
-  if (loading) {
-    return renderLoader();
-  }
-
-  const renderErrorView: ReactElementFunctionType = () => {
-    return (
-      <div>
-        <h1>Something went wrong !!!</h1>
-      </div>
-    );
-  };
-
-  if (error) {
-    return renderErrorView();
-  }
+  useEffect(() => {
+    setCurrentPage(page);
+  }, [page]);
 
   const handleEpisodeModalClose: VoidFunctionType = () => {
     setShowEpisodeModal(false);
@@ -44,6 +46,7 @@ const Episodes: React.FC = observer(() => {
     if (showEpisodeModal && episodeId) {
       return (
         <EpisodeModal
+          currentPage={currentPage}
           episodeId={episodeId}
           close={() => handleEpisodeModalClose()}
         />
@@ -53,20 +56,30 @@ const Episodes: React.FC = observer(() => {
   };
 
   const renderEpisodes: ReactElementFunctionType = () => {
-    return (
-      <ul className="flex flex-col md:flex-row flex-wrap gap-4 mt-4 ">
-        {episodeStore.episodesData.map((episode) => {
-          return (
-            <Episode
-              key={episode.id}
-              episode={episode}
-              setShowEpisodeModal={setShowEpisodeModal}
-              setEpisodeId={setEpisodeId}
-            />
-          );
-        })}
-      </ul>
-    );
+    if (loading || fetchMoreLoading) {
+      return renderLoader();
+    }
+    if (error) {
+      return renderErrorView();
+    }
+    const episodes = episodeStore.retrievePageEpisodes(currentPage);
+    if (episodes) {
+      return (
+        <ul className="flex flex-col md:flex-row flex-wrap gap-4 mt-4 ">
+          {episodes.map((episode) => {
+            return (
+              <Episode
+                key={episode.id}
+                episode={episode}
+                setShowEpisodeModal={setShowEpisodeModal}
+                setEpisodeId={setEpisodeId}
+              />
+            );
+          })}
+        </ul>
+      );
+    }
+    return <></>;
   };
 
   return (
@@ -77,9 +90,13 @@ const Episodes: React.FC = observer(() => {
         </h1>
         <p className="font-medium text-lg text-gray-400">Ricky and Morty</p>
       </div>
-
       {renderEpisodes()}
       {renderEpisodeModal()}
+      <EpisodesTab
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        fetchMore={fetchMore}
+      />
     </div>
   );
 });

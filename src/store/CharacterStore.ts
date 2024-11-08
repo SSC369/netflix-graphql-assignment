@@ -26,9 +26,15 @@ class CharacterStore {
     this.characters = [...characterInstances];
   }
 
+  getCharacter(id: string): CharacterModel {
+    const character = this.characters.find((character) => character.id === id)!;
+    return character;
+  }
+
   get charactersData(): CharacterModel[] {
     return this.characters;
   }
 }
+
 const characterStore = new CharacterStore();
 export default characterStore;

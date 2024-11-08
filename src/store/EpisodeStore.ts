@@ -1,34 +1,58 @@
 import { makeAutoObservable } from "mobx";
+
 import EpisodeModel from "../models/EpisodeModel";
-import { EpisodeType } from "../types";
+import {
+  EpisodesInfoType,
+  EpisodesPaginationType,
+  EpisodeType,
+} from "../types";
 
 class EpisodeStore {
-  episodes: EpisodeModel[] = [];
-  episode: EpisodeModel | null = null;
-  totalPages: number = 0;
-  hasNext: number | null = null;
-  hasPrev: number | null = null;
+  pagination: EpisodesPaginationType = {
+    totalPages: 0,
+    prev: null,
+    next: null,
+  };
+  pageEpisodes: Map<number, EpisodeModel[]> = new Map();
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  setEpisode(episodeData: EpisodeType): void {
-    const { id, airDate, name, episode, created } = episodeData;
-    this.episode = new EpisodeModel(id, name, airDate, episode, created);
+  getEpisode(episodeId: string, currentPage: number): EpisodeModel | undefined {
+    return this.pageEpisodes
+      .get(currentPage)!
+      .find((episode) => episode.id === episodeId);
   }
 
-  addEpisode(
-    id: string,
-    name: string,
-    airDate: string,
-    episode: string,
-    created: string
-  ): void {
-    this.episodes.push(new EpisodeModel(id, name, airDate, episode, created));
+  editEpisodesPagination(pagesInfo: EpisodesInfoType): void {
+    const { next, prev, pages } = pagesInfo;
+    this.pagination = {
+      totalPages: pages,
+      prev,
+      next,
+    };
   }
-  get episodesData(): EpisodeModel[] {
-    return this.episodes;
+
+  get paginationData(): EpisodesPaginationType {
+    return this.pagination;
+  }
+
+  addEpisodes(episdoes: EpisodeType[], pagesInfo: EpisodesInfoType): void {
+    this.editEpisodesPagination(pagesInfo);
+    const newEpisodes = episdoes.map((episodeData) => {
+      const { id, created, name, airDate, episode } = episodeData;
+      return new EpisodeModel(id, name, airDate, episode, created);
+    });
+    const { next, pages } = pagesInfo;
+    const currentPage = next ? next - 1 : pages;
+    if (!this.pageEpisodes.get(currentPage)) {
+      this.pageEpisodes.set(currentPage, newEpisodes);
+    }
+  }
+
+  retrievePageEpisodes(page: number): EpisodeModel[] {
+    return this.pageEpisodes.get(page)!;
   }
 }
 
