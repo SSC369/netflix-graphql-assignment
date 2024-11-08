@@ -2,9 +2,9 @@ import { makeAutoObservable } from "mobx";
 
 import EpisodeModel from "../models/EpisodeModel";
 import {
+  EpisodeResponseDataType,
   EpisodesInfoType,
   EpisodesPaginationType,
-  EpisodeType,
 } from "../types";
 
 class EpisodeStore {
@@ -38,11 +38,14 @@ class EpisodeStore {
     return this.pagination;
   }
 
-  addEpisodes(episdoes: EpisodeType[], pagesInfo: EpisodesInfoType): void {
+  addEpisodes(
+    episodes: EpisodeResponseDataType[],
+    pagesInfo: EpisodesInfoType
+  ): void {
     this.editEpisodesPagination(pagesInfo);
-    const newEpisodes = episdoes.map((episodeData) => {
-      const { id, created, name, airDate, episode } = episodeData;
-      return new EpisodeModel(id, name, airDate, episode, created);
+    const newEpisodes = episodes.map((episodeData) => {
+      const { id, name } = episodeData;
+      return new EpisodeModel(id, name);
     });
     const { next, pages } = pagesInfo;
     const currentPage = next ? next - 1 : pages;

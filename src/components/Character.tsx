@@ -5,7 +5,7 @@ import { CharacterPropsType, VoidFunctionType } from "../types";
 
 const Character: React.FC<CharacterPropsType> = observer(
   ({ character, handleFetchCharacter }) => {
-    const { id, name, image } = character;
+    const { id, name, image, status, gender } = character;
 
     const handleCharacterClick: VoidFunctionType = () => {
       handleFetchCharacter(id);
@@ -14,12 +14,17 @@ const Character: React.FC<CharacterPropsType> = observer(
     return (
       <li
         onClick={handleCharacterClick}
-        className="flex flex-col gap-2 items-center"
+        className="flex items-start gap-2 w-[28%]"
       >
         <img src={image} alt={name} className="h-32" />
-        <p className="md:text-base text-sm font-medium text-white max-w-[120px]">
-          {name}
-        </p>
+
+        <div className="text-slate-400 flex flex-col gap-2">
+          <p className="md:text-base text-sm font-medium text-white max-w-[120px]">
+            {name}
+          </p>
+          <p>{status}</p>
+          <p>{gender}</p>
+        </div>
       </li>
     );
   }

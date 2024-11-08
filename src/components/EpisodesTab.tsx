@@ -9,29 +9,37 @@ import {
   ReactElementFunctionType,
   VoidFunctionType,
 } from "../types";
-import { formatEpisodes } from "../factories/episodeFactory";
 
 const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
   ({ fetchMore, currentPage, setCurrentPage }) => {
     const pagination = episodeStore.paginationData;
     const { totalPages } = pagination;
+    const pagesMap = episodeStore.pageEpisodes;
 
     const handlePageClick = (page: number): void => {
       setCurrentPage(page);
+      if (!pagesMap.has(page)) {
+        fetchMore({
+          variables: {
+            page: page,
+          },
+        }).then(({ data }) => {
+          const { episodes } = data;
+          handleFetchMoreSuccess(episodes);
+        });
+      }
     };
 
     const handleFetchMoreSuccess = (
       episodes: EpisodesResponseDataType
     ): void => {
       const { info, results } = episodes;
-      const formattedEpisodeResults = formatEpisodes(results);
-      episodeStore.addEpisodes(formattedEpisodeResults, info);
+      episodeStore.addEpisodes(results, info);
     };
 
     const handleNextPageClick: VoidFunctionType = () => {
       if (currentPage < totalPages) {
         setCurrentPage(currentPage + 1);
-        const pagesMap = episodeStore.pageEpisodes;
         if (!pagesMap.has(currentPage + 1)) {
           fetchMore({
             variables: {
@@ -48,7 +56,6 @@ const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
     const handlePrevPageClick: VoidFunctionType = () => {
       if (currentPage > 1) {
         setCurrentPage(currentPage - 1);
-        const pagesMap = episodeStore.pageEpisodes;
         if (!pagesMap.has(currentPage - 1)) {
           fetchMore({
             variables: {

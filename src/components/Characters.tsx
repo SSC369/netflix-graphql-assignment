@@ -74,7 +74,7 @@ const Characters: React.FC<CharactersPropsType> = observer(({ episodeId }) => {
       style={{ height: "calc(80vh - 100px)" }}
       className="overflow-y-auto custom-scrollbar"
     >
-      <ul className="flex justify-center flex-wrap gap-4 mt-4">
+      <ul className="flex flex-wrap gap-4 mt-4">
         {characterStore.charactersData.map((character) => {
           const { id } = character;
           return (

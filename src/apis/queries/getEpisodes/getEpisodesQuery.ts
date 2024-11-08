@@ -12,9 +12,6 @@ export const GET_EPISODES: DocumentNode = gql`
       results {
         name
         id
-        episode
-        created
-        air_date
       }
     }
   }

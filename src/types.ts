@@ -81,6 +81,12 @@ export interface CharacterIdDataResponseType {
 }
 
 export interface EpisodeResponseDataType {
+  name: string;
+  id: string;
+  __typename: string;
+}
+
+export interface EpisodeDetailsResponseType {
   air_date: string;
   name: string;
   id: string;
@@ -105,13 +111,13 @@ export interface EpisodesPaginationType {
 
 export interface EpisodesResponseDataType {
   info: EpisodesInfoType;
-  results: EpisodeResponseDataType[];
+  results: EpisodeDetailsResponseType[];
 }
 
 export interface FetchMoreDataType {
   episodes: {
     info: EpisodesInfoType;
-    results: EpisodeResponseDataType[];
+    results: EpisodeDetailsResponseType[];
   };
 }
 
@@ -128,7 +134,7 @@ export interface EpisodeModalPropsType {
 }
 
 export interface FetchEpisodeHookType {
-  (episodeId: string): {
+  (episodeId: string, currentPage: number): {
     loading: boolean;
     error: ApolloError | undefined;
   };
@@ -173,14 +179,14 @@ export interface CharacterPropsType {
 }
 
 export interface FormatEpisodesType {
-  (episodesData: EpisodeResponseDataType[]): EpisodeType[];
+  (episodesData: EpisodeDetailsResponseType): EpisodeType;
 }
 
 export interface GetCharactersSuccessFunctionType {
   (charactersData: CharacterDataResponseType[]): void;
 }
 export interface GetEpisodeSuccessFunctionType {
-  (episodeData: EpisodeResponseDataType): void;
+  (episodeData: EpisodeDetailsResponseType, currentPage: number): void;
 }
 export interface GetEpisodesSuccessFunctionType {
   (episodesData: EpisodesResponseDataType): void;

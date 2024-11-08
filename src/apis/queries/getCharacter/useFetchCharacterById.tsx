@@ -9,6 +9,7 @@ import { onSuccess } from "./responseHandler";
 
 const useFetchCharacterById: FetchCharacterByIdHookType = () => {
   const [getCharacter, { loading, error }] = useLazyQuery(GET_CHARACTER, {
+    fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       const character: CharacterIdDataResponseType = data.character;
       onSuccess(character);

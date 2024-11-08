@@ -1,9 +1,18 @@
-import { formatEpisodes } from "../../../factories/episodeFactory";
 import episodeStore from "../../../store/EpisodeStore";
-import { GetEpisodesSuccessFunctionType } from "../../../types";
+import {
+  EpisodeResponseDataType,
+  EpisodesInfoType,
+  GetEpisodesSuccessFunctionType,
+} from "../../../types";
 
-export const onSuccess: GetEpisodesSuccessFunctionType = (episodesData) => {
+interface GetEpisodesSuccessDataType {
+  (episodeData: {
+    info: EpisodesInfoType;
+    results: EpisodeResponseDataType[];
+  }): void;
+}
+
+export const onSuccess: GetEpisodesSuccessDataType = (episodesData) => {
   const { info, results } = episodesData;
-  const formattedEpisodeResults = formatEpisodes(results);
-  episodeStore.addEpisodes(formattedEpisodeResults, info);
+  episodeStore.addEpisodes(results, info);
 };
