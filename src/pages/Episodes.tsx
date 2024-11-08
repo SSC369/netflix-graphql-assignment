@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import useFetchEpisodes from "../apis/queries/getEpisodes/useFetchEpisodes";
 import { observer } from "mobx-react-lite";
+
 import episodeStore from "../store/EpisodeStore";
 import Episode from "../components/Episode";
 import EpisodeModal from "../components/EpisodeModal";
 import { ReactElementFunctionType, VoidFunctionType } from "../types";
 import Loader from "../components/Loader";
 import EpisodesTab from "../components/EpisodesTab";
+import useFetchEpisodes from "../apis/queries/getEpisodes/useFetchEpisodes";
 
 const renderLoader: ReactElementFunctionType = () => {
   return (
@@ -17,8 +18,10 @@ const renderLoader: ReactElementFunctionType = () => {
 };
 const renderErrorView: ReactElementFunctionType = () => {
   return (
-    <div>
-      <h1>Something went wrong !!!</h1>
+    <div className="flex my-auto items-center justify-center mt-6">
+      <h1 className="text-xl font-semibold text-white">
+        Something went wrong !!!
+      </h1>
     </div>
   );
 };
@@ -27,8 +30,7 @@ const Episodes: React.FC = observer(() => {
   const [showEpisodeModal, setShowEpisodeModal] = useState<boolean>(false);
   const [episodeId, setEpisodeId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
-
-  const { loading, error, fetchMore, fetchMoreLoading } = useFetchEpisodes();
+  const { loading, error, refetch, fetchMoreLoading } = useFetchEpisodes();
   const pagination = episodeStore.paginationData;
   const { next, totalPages } = pagination;
   const page = next ? next - 1 : totalPages;
@@ -95,7 +97,7 @@ const Episodes: React.FC = observer(() => {
       <EpisodesTab
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        fetchMore={fetchMore}
+        refetch={refetch}
       />
     </div>
   );

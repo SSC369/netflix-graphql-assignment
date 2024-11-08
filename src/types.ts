@@ -31,34 +31,18 @@ export interface FetchEpisodesHookType {
     fetchMoreLoading: boolean;
     loading: boolean;
     error: ApolloError | undefined;
-    fetchMore: <TFetchData = any, TFetchVars extends OperationVariables = any>(
-      fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData> & {
-        updateQuery?: (
-          previousQueryResult: any,
-          options: {
-            fetchMoreResult: TFetchData;
-            variables: TFetchVars;
-          }
-        ) => any;
-      }
-    ) => Promise<ApolloQueryResult<TFetchData>>;
+    refetch: (
+      variables?: Partial<OperationVariables> | undefined
+    ) => Promise<ApolloQueryResult<any>>;
   };
 }
 
 export interface EpisodesTabPropsType {
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  fetchMore: <TFetchData = any, TFetchVars extends OperationVariables = any>(
-    fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData> & {
-      updateQuery?: (
-        previousQueryResult: any,
-        options: {
-          fetchMoreResult: TFetchData;
-          variables: TFetchVars;
-        }
-      ) => any;
-    }
-  ) => Promise<ApolloQueryResult<TFetchData>>;
+  refetch: (
+    variables?: Partial<OperationVariables> | undefined
+  ) => Promise<ApolloQueryResult<any>>;
 }
 
 export interface EpisodesInfoType {

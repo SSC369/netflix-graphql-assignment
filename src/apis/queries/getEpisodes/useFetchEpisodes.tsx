@@ -5,7 +5,7 @@ import { FetchEpisodesHookType } from "../../../types";
 import { onSuccess } from "./responseHandler";
 
 const useFetchEpisodes: FetchEpisodesHookType = () => {
-  const { loading, error, fetchMore, networkStatus } = useQuery(GET_EPISODES, {
+  const { loading, error, refetch, networkStatus } = useQuery(GET_EPISODES, {
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -17,6 +17,6 @@ const useFetchEpisodes: FetchEpisodesHookType = () => {
     },
   });
   const fetchMoreLoading: boolean = NetworkStatus.fetchMore === networkStatus;
-  return { loading, error, fetchMore, fetchMoreLoading };
+  return { loading, error, refetch, fetchMoreLoading };
 };
 export default useFetchEpisodes;

@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import { persistCache } from "apollo3-cache-persist";
 import {
   ApolloProvider,
   ApolloClient,
@@ -9,29 +10,16 @@ import {
 import "./index.css";
 import App from "./App.tsx";
 
-const cache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        episodes: {
-          keyArgs: ["page"],
-          read: (currentData) => {
-            return currentData;
-          },
-        },
-      },
-    },
-  },
-});
+const cache = new InMemoryCache({});
 
-// persistCache({
-//   cache,
-//   storage: window.localStorage,
-// });
+persistCache({
+  cache,
+  storage: window.localStorage,
+});
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "https://rickandmortyapi.com/graphql", // Replace with your GraphQL API URL
+    uri: "https://rickandmortyapi.com/graphql",
   }),
   cache,
 });

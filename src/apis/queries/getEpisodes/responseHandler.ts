@@ -1,9 +1,5 @@
 import episodeStore from "../../../store/EpisodeStore";
-import {
-  EpisodeResponseDataType,
-  EpisodesInfoType,
-  GetEpisodesSuccessFunctionType,
-} from "../../../types";
+import { EpisodeResponseDataType, EpisodesInfoType } from "../../../types";
 
 interface GetEpisodesSuccessDataType {
   (episodeData: {

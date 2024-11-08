@@ -14,7 +14,7 @@ const Character: React.FC<CharacterPropsType> = observer(
     return (
       <li
         onClick={handleCharacterClick}
-        className="flex items-start gap-2 w-[28%]"
+        className="flex md:flex-row flex-col items-start gap-2 md:w-[48%] lg:w-[28%]"
       >
         <img src={image} alt={name} className="h-32" />
 

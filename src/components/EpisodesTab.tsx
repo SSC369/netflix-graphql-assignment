@@ -11,7 +11,7 @@ import {
 } from "../types";
 
 const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
-  ({ fetchMore, currentPage, setCurrentPage }) => {
+  ({ refetch, currentPage, setCurrentPage }) => {
     const pagination = episodeStore.paginationData;
     const { totalPages } = pagination;
     const pagesMap = episodeStore.pageEpisodes;
@@ -19,10 +19,8 @@ const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
     const handlePageClick = (page: number): void => {
       setCurrentPage(page);
       if (!pagesMap.has(page)) {
-        fetchMore({
-          variables: {
-            page: page,
-          },
+        refetch({
+          page: page,
         }).then(({ data }) => {
           const { episodes } = data;
           handleFetchMoreSuccess(episodes);
@@ -41,10 +39,8 @@ const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
       if (currentPage < totalPages) {
         setCurrentPage(currentPage + 1);
         if (!pagesMap.has(currentPage + 1)) {
-          fetchMore({
-            variables: {
-              page: currentPage + 1,
-            },
+          refetch({
+            page: currentPage + 1,
           }).then(({ data }) => {
             const { episodes } = data;
             handleFetchMoreSuccess(episodes);
@@ -57,10 +53,8 @@ const EpisodesTab: React.FC<EpisodesTabPropsType> = observer(
       if (currentPage > 1) {
         setCurrentPage(currentPage - 1);
         if (!pagesMap.has(currentPage - 1)) {
-          fetchMore({
-            variables: {
-              page: currentPage - 1,
-            },
+          refetch({
+            page: currentPage - 1,
           }).then(({ data }) => {
             const { episodes } = data;
             handleFetchMoreSuccess(episodes);
