@@ -1,8 +1,8 @@
 import { formatEpisodes } from "../../../factories/episodeFactory";
 import episodeStore from "../../../store/EpisodeStore";
-import { GetEpisodeSuccessFunctionType } from "../../../types";
+import { GetEpisodeSuccessHandlerType } from "../../../types";
 
-export const onSuccess: GetEpisodeSuccessFunctionType = (
+export const onSuccess: GetEpisodeSuccessHandlerType = (
   episodeData,
   currentPage
 ) => {

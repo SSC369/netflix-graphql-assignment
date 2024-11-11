@@ -1,12 +1,16 @@
 import {
   ApolloError,
   ApolloQueryResult,
-  FetchMoreQueryOptions,
   LazyQueryExecFunction,
   OperationVariables,
 } from "@apollo/client";
 import EpisodeModel from "./models/EpisodeModel";
 import CharacterModel from "./models/CharacterModel";
+
+export enum EpisodeModalTabsEnum {
+  info = "info",
+  characters = "characters",
+}
 
 export interface CharacterLocationType {
   id: string;
@@ -28,7 +32,7 @@ export interface CharacterOriginResponseType {
 
 export interface FetchEpisodesHookType {
   (): {
-    fetchMoreLoading: boolean;
+    refetchLoading: boolean;
     loading: boolean;
     error: ApolloError | undefined;
     refetch: (
@@ -121,6 +125,9 @@ export interface FetchEpisodeHookType {
   (episodeId: string, currentPage: number): {
     loading: boolean;
     error: ApolloError | undefined;
+    refetch: (
+      variables?: Partial<OperationVariables> | undefined
+    ) => Promise<ApolloQueryResult<any>>;
   };
 }
 
@@ -128,6 +135,9 @@ export interface FetchCharactersHookType {
   (episodeId: string): {
     loading: boolean;
     error: ApolloError | undefined;
+    refetch: (
+      variables?: Partial<OperationVariables> | undefined
+    ) => Promise<ApolloQueryResult<any>>;
   };
 }
 
@@ -166,14 +176,11 @@ export interface FormatEpisodesType {
   (episodesData: EpisodeDetailsResponseType): EpisodeType;
 }
 
-export interface GetCharactersSuccessFunctionType {
+export interface GetCharactersSuccessHandlerType {
   (charactersData: CharacterDataResponseType[]): void;
 }
-export interface GetEpisodeSuccessFunctionType {
+export interface GetEpisodeSuccessHandlerType {
   (episodeData: EpisodeDetailsResponseType, currentPage: number): void;
-}
-export interface GetEpisodesSuccessFunctionType {
-  (episodesData: EpisodesResponseDataType): void;
 }
 
 export interface ReactElementFunctionType {
@@ -189,4 +196,16 @@ export interface CharacterDetailsModalProps {
   characterLoading: boolean;
   characterError: ApolloError | undefined;
   selectedCharacter: string;
+  getCharacter: LazyQueryExecFunction<any, OperationVariables>;
+}
+
+export interface GetEpisodesSuccessHandlerType {
+  (episodeData: {
+    info: EpisodesInfoType;
+    results: EpisodeResponseDataType[];
+  }): void;
+}
+
+export interface GetCharacterSuccessHandlerType {
+  (character: CharacterIdDataResponseType): void;
 }

@@ -17,7 +17,6 @@ const Character: React.FC<CharacterPropsType> = observer(
         className="flex md:flex-row flex-col items-start gap-2 md:w-[48%] lg:w-[28%]"
       >
         <img src={image} alt={name} className="h-32" />
-
         <div className="text-slate-400 flex flex-col gap-2">
           <p className="md:text-base text-sm font-medium text-white max-w-[120px]">
             {name}

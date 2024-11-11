@@ -7,8 +7,8 @@ class CharacterModel {
   image: string;
   name: string;
   status: string;
-  location: CharacterLocationType | null = null;
-  origin: CharacterOriginType | null = null;
+  location: CharacterLocationType | undefined = undefined;
+  origin: CharacterOriginType | undefined = undefined;
   constructor(
     id: string,
     gender: string,

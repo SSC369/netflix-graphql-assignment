@@ -5,7 +5,7 @@ import { GET_CHARACTERS } from "./getCharactersQuery";
 import { onSuccess } from "./responseHandlers";
 
 const useFetchCharacters: FetchCharactersHookType = (episodeId) => {
-  const { loading, error } = useQuery(GET_CHARACTERS, {
+  const { loading, error, refetch } = useQuery(GET_CHARACTERS, {
     fetchPolicy: "cache-and-network",
     variables: {
       episodeId,
@@ -16,7 +16,7 @@ const useFetchCharacters: FetchCharactersHookType = (episodeId) => {
     },
   });
 
-  return { loading, error };
+  return { loading, error,refetch };
 };
 
 export default useFetchCharacters;

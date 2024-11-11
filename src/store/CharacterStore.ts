@@ -22,7 +22,6 @@ class CharacterStore {
       const { id, gender, image, name, status } = character;
       return new CharacterModel(id, gender, image, name, status);
     });
-
     this.characters = [...characterInstances];
   }
 

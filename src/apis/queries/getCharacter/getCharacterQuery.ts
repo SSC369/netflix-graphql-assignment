@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { DocumentNode, gql } from "@apollo/client";
 
-export const GET_CHARACTER = gql`
+export const GET_CHARACTER: DocumentNode = gql`
   query Query($characterId: ID!) {
     character(id: $characterId) {
       id

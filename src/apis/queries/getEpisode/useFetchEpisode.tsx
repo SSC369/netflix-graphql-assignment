@@ -4,7 +4,7 @@ import { FetchEpisodeHookType } from "../../../types";
 import { onSuccess } from "./responseHandlers";
 
 const useFetchEpisode: FetchEpisodeHookType = (episodeId, currentPage) => {
-  const { loading, error } = useQuery(GET_EPISODE, {
+  const { loading, error,refetch } = useQuery(GET_EPISODE, {
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-only",
     variables: {
@@ -14,6 +14,6 @@ const useFetchEpisode: FetchEpisodeHookType = (episodeId, currentPage) => {
       onSuccess(episode, currentPage);
     },
   });
-  return { loading, error };
+  return { loading, error, refetch };
 };
 export default useFetchEpisode;

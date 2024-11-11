@@ -1,7 +1,7 @@
 import characterStore from "../../../store/CharacterStore";
-import { CharacterIdDataResponseType } from "../../../types";
+import { GetCharacterSuccessHandlerType } from "../../../types";
 
-export const onSuccess = (character: CharacterIdDataResponseType) => {
+export const onSuccess: GetCharacterSuccessHandlerType = (character) => {
   const { id, location, origin } = character;
   const characterObject = characterStore.getCharacter(id);
   characterObject.editLocation(location);

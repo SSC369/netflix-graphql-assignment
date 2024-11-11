@@ -1,7 +1,8 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 
 import { EpisodePropsType, VoidFunctionType } from "../types";
-import { observer } from "mobx-react-lite";
+
 
 const Episode: React.FC<EpisodePropsType> = observer(
   ({ episode, setEpisodeId, setShowEpisodeModal }) => {

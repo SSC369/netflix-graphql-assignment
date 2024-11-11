@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 
 import {
   EpisodeModalPropsType,
+  EpisodeModalTabsEnum,
   ReactElementFunctionType,
   VoidFunctionType,
 } from "../types";
@@ -12,7 +13,9 @@ import Characters from "./Characters";
 
 const EpisodeModal: React.FC<EpisodeModalPropsType> = observer(
   ({ close, episodeId, currentPage }) => {
-    const [selectedTab, setSelectedTab] = useState<string>("info");
+    const [selectedTab, setSelectedTab] = useState<string>(
+      EpisodeModalTabsEnum.info
+    );
     const [isVisible, setIsVisible] = useState<boolean>(false);
 
     useEffect(() => {
@@ -27,7 +30,7 @@ const EpisodeModal: React.FC<EpisodeModalPropsType> = observer(
     };
 
     const renderEpisodeDetails: ReactElementFunctionType = () => {
-      if (selectedTab === "info") {
+      if (selectedTab === EpisodeModalTabsEnum.info) {
         return (
           <EpisodeDetails currentPage={currentPage} episodeId={episodeId} />
         );
@@ -35,29 +38,26 @@ const EpisodeModal: React.FC<EpisodeModalPropsType> = observer(
       return <Characters episodeId={episodeId} />;
     };
 
+    const renderButton = (name: EpisodeModalTabsEnum): React.ReactElement => {
+      return (
+        <button
+          onClick={() => setSelectedTab(name)}
+          className={`w-1/2 rounded first-letter:capitalize font-semibold transition-all duration-300 ease-in-out ${
+            selectedTab === name
+              ? "bg-netflix text-slate-200"
+              : "text-slate-400"
+          }`}
+        >
+          {name}
+        </button>
+      );
+    };
+
     const renderButtons: ReactElementFunctionType = () => {
       return (
         <div className="flex justify-between self-center p-2 bg-gray-700 max-w-[400px] w-2/3 mt-6 rounded-xl min-h-[60px]">
-          <button
-            onClick={() => setSelectedTab("info")}
-            className={`w-1/2 rounded font-semibold transition-all duration-300 ease-in-out ${
-              selectedTab === "info"
-                ? "bg-netflix text-slate-200"
-                : "text-slate-400"
-            }`}
-          >
-            Info
-          </button>
-          <button
-            onClick={() => setSelectedTab("characters")}
-            className={`w-1/2 rounded font-semibold transition-all duration-300 ease-in-out ${
-              selectedTab === "characters"
-                ? "bg-netflix text-slate-200"
-                : "text-slate-400"
-            }`}
-          >
-            Characters
-          </button>
+          {renderButton(EpisodeModalTabsEnum.info)}
+          {renderButton(EpisodeModalTabsEnum.characters)}
         </div>
       );
     };

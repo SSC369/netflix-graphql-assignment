@@ -12,7 +12,13 @@ import Loader from "./Loader";
 import CharacterModel from "../models/CharacterModel";
 
 const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = observer(
-  ({ close, characterError, characterLoading, selectedCharacter }) => {
+  ({
+    close,
+    characterError,
+    characterLoading,
+    selectedCharacter,
+    getCharacter,
+  }) => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
 
     const character: CharacterModel =
@@ -29,6 +35,25 @@ const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = observer(
       }, 300);
     };
 
+    const handleFetchCharacterRetry: VoidFunctionType = () => {
+      getCharacter({
+        variables: {
+          characterId: selectedCharacter,
+        },
+      });
+    };
+
+    const renderErrorView: ReactElementFunctionType = () => {
+      return (
+        <div className="flex my-auto items-center justify-center">
+          <h1 className="text-xl text-white font-semibold">
+            Something went wrong !!!
+          </h1>
+          <button onClick={handleFetchCharacterRetry}>Retry</button>
+        </div>
+      );
+    };
+
     const renderLoader: ReactElementFunctionType = () => {
       return (
         <div className="flex my-auto items-center justify-center">
@@ -36,52 +61,39 @@ const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = observer(
         </div>
       );
     };
-    const renderErrorView: ReactElementFunctionType = () => {
-      return (
-        <div className="flex my-auto items-center justify-center">
-          <h1 className="text-xl text-white font-semibold">
-            Something went wrong !!!
-          </h1>
-        </div>
-      );
-    };
 
-    const { gender, image, location, name, origin, status } = character;
+    if (characterError) {
+      return renderErrorView();
+    }
+
+    if (characterLoading) {
+      return renderLoader();
+    }
 
     const renderCharacter: ReactElementFunctionType = () => {
-      if (characterLoading) {
-        return renderLoader();
-      }
-
-      if (characterError) {
-        return renderErrorView();
-      }
+      const { gender, image, location, name, origin, status } = character;
+      const renderCharacterDetail = (
+        name: string,
+        value: string | undefined
+      ): React.ReactElement => {
+        return (
+          <div className="flex items-center gap-2 text-lg">
+            <p className="text-slate-400 font-medium">{name}:</p>
+            <p className="text-slate-200 font-medium">{value}</p>
+          </div>
+        );
+      };
 
       return (
         <div className="flex items-start gap-4 mt-6">
           <img src={image} alt={name} className="h-44" />
 
           <div className="flex flex-col gap-4 flex-grow self-center">
-            <div className="flex items-center gap-2 text-lg">
-              <p className="text-slate-400 font-medium">Name:</p>
-              <p className="text-slate-200 font-medium">{name}</p>
-            </div>
-            <div className="flex items-center gap-2  text-lg">
-              <p className="text-slate-400 font-medium">Location:</p>
-              <p className="text-slate-200 font-medium">{location?.name}</p>
-            </div>
-            <div className="flex items-center gap-2  text-lg">
-              <p className="text-slate-400 font-medium">Origin:</p>
-              <p className="text-slate-200 font-medium">{origin?.name}</p>
-            </div>
-            <div className="flex items-center gap-2  text-lg">
-              <p className="text-slate-400 font-medium">Gender:</p>
-              <p className="text-slate-200 font-medium">{gender}</p>
-            </div>
-            <div className="flex items-center gap-2 text-lg">
-              <p className="text-slate-400 font-medium">Status:</p>
-              <p className="text-slate-200 font-medium">{status}</p>
-            </div>
+            {renderCharacterDetail("Name", name)}
+            {renderCharacterDetail("Location", location?.name)}
+            {renderCharacterDetail("Origin", origin?.name)}
+            {renderCharacterDetail("Gender", gender)}
+            {renderCharacterDetail("Status", status)}
           </div>
         </div>
       );
@@ -104,7 +116,6 @@ const CharacterDetailsModal: React.FC<CharacterDetailsModalProps> = observer(
           >
             <IoClose className="text-xl" />
           </button>
-
           {renderCharacter()}
         </div>
       </div>

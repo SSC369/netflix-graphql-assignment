@@ -1,14 +1,7 @@
 import episodeStore from "../../../store/EpisodeStore";
-import { EpisodeResponseDataType, EpisodesInfoType } from "../../../types";
+import { GetEpisodesSuccessHandlerType } from "../../../types";
 
-interface GetEpisodesSuccessDataType {
-  (episodeData: {
-    info: EpisodesInfoType;
-    results: EpisodeResponseDataType[];
-  }): void;
-}
-
-export const onSuccess: GetEpisodesSuccessDataType = (episodesData) => {
+export const onSuccess: GetEpisodesSuccessHandlerType = (episodesData) => {
   const { info, results } = episodesData;
   episodeStore.addEpisodes(results, info);
 };

@@ -16,7 +16,7 @@ const useFetchEpisodes: FetchEpisodesHookType = () => {
       onSuccess(episodes);
     },
   });
-  const fetchMoreLoading: boolean = NetworkStatus.fetchMore === networkStatus;
-  return { loading, error, refetch, fetchMoreLoading };
+  const refetchLoading: boolean = NetworkStatus.refetch === networkStatus;
+  return { loading, error, refetch, refetchLoading };
 };
 export default useFetchEpisodes;

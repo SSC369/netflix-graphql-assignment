@@ -10,7 +10,7 @@ import useFetchCharacterById from "../apis/queries/getCharacter/useFetchCharacte
 import CharacterDetailsModal from "./CharacterDetailsModal";
 
 const Characters: React.FC<CharactersPropsType> = observer(({ episodeId }) => {
-  const { loading, error } = useFetchCharacters(episodeId);
+  const { loading, error, refetch } = useFetchCharacters(episodeId);
   const [showCharacterDetailsModal, setShowCharacterDetailsModal] =
     useState<boolean>(false);
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
@@ -32,17 +32,24 @@ const Characters: React.FC<CharactersPropsType> = observer(({ episodeId }) => {
     setShowCharacterDetailsModal(true);
   };
 
-  const renderLoader: ReactElementFunctionType = () => {
-    return (
-      <div className="flex my-auto items-center justify-center">
-        <Loader />
-      </div>
-    );
+  const handleRefetchCharacters = () => {
+    refetch({
+      episodeId,
+    });
   };
   const renderErrorView: ReactElementFunctionType = () => {
     return (
       <div>
         <h1>Something went wrong !!!</h1>
+        <button onClick={handleRefetchCharacters}>Retry</button>
+      </div>
+    );
+  };
+
+  const renderLoader: ReactElementFunctionType = () => {
+    return (
+      <div className="flex my-auto items-center justify-center">
+        <Loader />
       </div>
     );
   };
@@ -63,6 +70,7 @@ const Characters: React.FC<CharactersPropsType> = observer(({ episodeId }) => {
           close={() => setShowCharacterDetailsModal(false)}
           characterLoading={characterLoading}
           characterError={characterError}
+          getCharacter={getCharacter}
         />
       );
     }

@@ -1,6 +1,6 @@
 import characterStore from "../../../store/CharacterStore";
-import { GetCharactersSuccessFunctionType } from "../../../types";
+import { GetCharactersSuccessHandlerType } from "../../../types";
 
-export const onSuccess: GetCharactersSuccessFunctionType = (charactersData) => {
+export const onSuccess: GetCharactersSuccessHandlerType = (charactersData) => {
   characterStore.addCharactersIntoStore(charactersData);
 };
